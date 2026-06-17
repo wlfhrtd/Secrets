@@ -1,0 +1,33 @@
+<RCC>
+    <qresource prefix="/">
+        <file>translations/secrets_ru.qm</file>
+        <file>icons/save.svg</file>
+        <file>icons/save-vault.svg</file>
+        <file>icons/save-vault-as.svg</file>
+        <file>icons/reveal.svg</file>
+        <file>icons/rename.svg</file>
+        <file>icons/quit.svg</file>
+        <file>icons/paste.svg</file>
+        <file>icons/open-vault.svg</file>
+        <file>icons/new-vault.svg</file>
+        <file>icons/new-folder.svg</file>
+        <file>icons/new-entry.svg</file>
+        <file>icons/minimize.svg</file>
+        <file>icons/maximize.svg</file>
+        <file>icons/hide.svg</file>
+        <file>icons/export-xml.svg</file>
+        <file>icons/expand-all.svg</file>
+        <file>icons/exit.svg</file>
+        <file>icons/edit.svg</file>
+        <file>icons/delete.svg</file>
+        <file>icons/cut.svg</file>
+        <file>icons/copy.svg</file>
+        <file>icons/copy-selected.svg</file>
+        <file>icons/collapse-all.svg</file>
+        <file>icons/change-master-password.svg</file>
+        <file>icons/about-qt.svg</file>
+        <file>icons/secrets.svg</file>
+        <file>icons/settings.svg</file>
+        <file>icons/stopwatch.svg</file>
+    </qresource>
+</RCC>
