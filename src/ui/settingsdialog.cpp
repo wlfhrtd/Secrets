@@ -3,6 +3,7 @@
 
 #include <QPushButton>
 
+
 SettingsDialog::SettingsDialog(
     const AppSettings& settings,
     QWidget* parent)

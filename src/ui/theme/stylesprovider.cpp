@@ -1,85 +1,63 @@
-#include "thememanager.h"
+#include "stylesprovider.h"
 
 #include <QStyleFactory>
-#include <qapplication.h>
 #include <shared/systemcontext.h>
 
 
-void ThemeManager::apply(ThemeMode mode)
+QPalette StylesProvider::palette(PaletteMode mode) const
 {
-    qApp->setStyleSheet("");
-
-    if (mode == ThemeMode::Light)
+    switch (mode)
     {
-        applyLightTheme();
-
-        return;
-    }
-
-    if (mode == ThemeMode::Dark)
+    case PaletteMode::System:
     {
-        applyDarkTheme();
-
-        return;
+        return SystemContext::theme.palette;
     }
-
-    applySystemTheme();
+    case PaletteMode::Light:
+    {
+        return fusionLightPalette();
+    }
+    case PaletteMode::Dark:
+    {
+        return fusionDarkPalette();
+    }
+    }
 }
 
-void ThemeManager::applySystemTheme()
+QStyle* StylesProvider::style(ThemeStyle style) const
 {
-    qApp->setStyle(QStyleFactory::create(SystemContext::theme.styleName));
-    qApp->setPalette(SystemContext::theme.palette);
-
-    m_uiIconColor = SystemContext::theme.palette.color(QPalette::WindowText);
-    m_systemIconColor = SystemContext::theme.palette.color(QPalette::WindowText);
+    switch (style)
+    {
+    case ThemeStyle::System:
+    {
+        return QStyleFactory::create(SystemContext::theme.styleName);
+    }
+    case ThemeStyle::Fusion:
+    {
+        return QStyleFactory::create("Fusion");
+    }
+    }
 }
 
-void ThemeManager::applyLightTheme()
+QColor StylesProvider::iconColor(IconColor color) const
 {
-    qApp->setStyle(QStyleFactory::create("Fusion"));
-    qApp->setPalette(createFusionLightPalette());
-
-    m_uiIconColor = QColor(32,32,32); // black
-
-#ifdef Q_OS_WIN
-    // On Windows Fusion Light produces light title bar
-    // so the window icon should be dark as well
-    m_systemIconColor = QColor(32,32,32); // black
-#else
-    // On Linux the title bar is usually controlled by the
-    // window manager (KDE/GNOME/etc.), not by Fusion.
-    m_systemIconColor = SystemContext::theme.palette.color(QPalette::WindowText);
-#endif
+    switch (color)
+    {
+    case IconColor::System:
+    {
+        return SystemContext::theme.palette.color(QPalette::WindowText);
+    }
+    case IconColor::White:
+    {
+        return QColor(220,220,220);
+    }
+    case IconColor::Black:
+    {
+        return QColor(32,32,32);
+    }
+    }
 }
 
-void ThemeManager::applyDarkTheme()
-{
-    qApp->setStyle(QStyleFactory::create("Fusion"));
-    qApp->setPalette(createFusionDarkPalette());
-
-    m_uiIconColor = QColor(220,220,220); // white
-
-#ifdef Q_OS_WIN
-    // On Windows Fusion Dark produces dark title bar
-    m_systemIconColor = QColor(220,220,220); // white
-#else
-    // On Linux keep following the system/window manager
-    m_systemIconColor = SystemContext::theme.palette.color(QPalette::WindowText);
-#endif
-}
-
-QColor ThemeManager::uiIconColor() const
-{
-    return m_uiIconColor;
-}
-
-QColor ThemeManager::systemIconColor() const
-{
-    return m_systemIconColor;
-}
-
-QPalette ThemeManager::createFusionLightPalette() const
+QPalette StylesProvider::fusionLightPalette() const
 {
     QPalette palette;
 
@@ -141,7 +119,7 @@ QPalette ThemeManager::createFusionLightPalette() const
     return palette;
 }
 
-QPalette ThemeManager::createFusionDarkPalette() const
+QPalette StylesProvider::fusionDarkPalette() const
 {
     QPalette palette;
 

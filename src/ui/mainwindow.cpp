@@ -21,7 +21,7 @@
 #include <shared/applicationcontext.h>
 #include "ui/localization/languagemanager.h"
 #include "ui/icons/iconprovider.h"
-#include "ui/theme/thememanager.h"
+#include "ui/theme/stylesprovider.h"
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -41,7 +41,7 @@ MainWindow::MainWindow(QWidget *parent)
 
     m_iconProvider = std::make_unique<IconProvider>();
 
-    m_themeManager = std::make_unique<ThemeManager>();
+    m_stylesProvider = std::make_unique<StylesProvider>();
 
     m_vault = std::make_unique<VaultService>(model);
 
@@ -919,10 +919,10 @@ void MainWindow::setupNoteToolBar()
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     ui->noteToolBar->addWidget(spacer);
 
-    const auto& icons = m_iconProvider->noteToolBarIcons();
+    // const auto& icons = m_iconProvider->noteToolBarIcons();
 
-    m_noteCopySelectedAction = ui->noteToolBar->addAction(icons.copySelected, QString());
-    m_noteRevealAction = ui->noteToolBar->addAction(icons.reveal, QString());
+    m_noteCopySelectedAction = ui->noteToolBar->addAction(m_iconProvider->icon(IconId::CopySelected, m_uiIconColor), QString());
+    m_noteRevealAction = ui->noteToolBar->addAction(m_iconProvider->icon(IconId::Reveal, m_uiIconColor), QString());
 
     m_noteCopySelectedAction->setToolTip(tr("Copy selected"));
     m_noteRevealAction->setToolTip(tr("Reveal"));
@@ -932,7 +932,7 @@ void MainWindow::setupNoteToolBar()
     m_revealCountdownLabel->setAlignment(Qt::AlignCenter);
     ui->noteToolBar->addWidget(m_revealCountdownLabel);
 
-    m_noteEditAction = ui->noteToolBar->addAction(icons.edit, QString());
+    m_noteEditAction = ui->noteToolBar->addAction(m_iconProvider->icon(IconId::Edit, m_uiIconColor), QString());
     m_noteEditAction->setToolTip(tr("Edit", "note tool bar edit action"));
 
     // timer setup
@@ -989,17 +989,17 @@ void MainWindow::setupNoteToolBar()
 
 void MainWindow::updateNoteToolBarState()
 {
-    const auto& icons = m_iconProvider->noteToolBarIcons();
+    // const auto& icons = m_iconProvider->noteToolBarIcons();
 
     // EDIT / SAVE
     if (m_editMode)
     {
-        m_noteEditAction->setIcon(icons.save);
+        m_noteEditAction->setIcon(m_iconProvider->icon(IconId::Save, m_uiIconColor));
         m_noteEditAction->setToolTip(tr("Save"));
     }
     else
     {
-        m_noteEditAction->setIcon(icons.edit);
+        m_noteEditAction->setIcon(m_iconProvider->icon(IconId::Edit, m_uiIconColor));
         m_noteEditAction->setToolTip(tr("Edit", "note tool bar edit action"));
     }
 
@@ -1007,7 +1007,7 @@ void MainWindow::updateNoteToolBarState()
     switch (m_revealState)
     {
     case RevealState::Hidden:
-        m_noteRevealAction->setIcon(icons.reveal);
+        m_noteRevealAction->setIcon(m_iconProvider->icon(IconId::Reveal, m_uiIconColor));
 
         m_noteRevealAction->setToolTip(tr("Reveal"));
 
@@ -1016,7 +1016,7 @@ void MainWindow::updateNoteToolBarState()
         break;
 
     case RevealState::Countdown:
-        m_noteRevealAction->setIcon(icons.stopwatch);
+        m_noteRevealAction->setIcon(m_iconProvider->icon(IconId::Stopwatch, m_uiIconColor));
 
         m_noteRevealAction->setToolTip(tr("Reveal indefinitely"));
 
@@ -1025,7 +1025,7 @@ void MainWindow::updateNoteToolBarState()
         break;
 
     case RevealState::Visible:
-        m_noteRevealAction->setIcon(icons.hide);
+        m_noteRevealAction->setIcon(m_iconProvider->icon(IconId::Hide, m_uiIconColor));
 
         m_noteRevealAction->setToolTip(tr("Hide"));
 
@@ -1262,17 +1262,18 @@ void MainWindow::updateVaultLabel()
 
 void MainWindow::applyTheme()
 {
-    m_themeManager->apply(m_settings.theme);
+    configureTheme();
+
+    qApp->setStyle(m_stylesProvider->style(m_themeStyle));
+    qApp->setPalette(m_themePalette);
 
     fixSplitterGlueing();
 
     repolishWidgets();
 
-    m_iconProvider->setUiColor(m_themeManager->uiIconColor());
-    m_iconProvider->setSystemColor(m_themeManager->systemIconColor());
-
-    updateIcons();
-
+    updateWindowIcon();
+    updateUiIcons();
+    updateTrayIcons();
     updateNoteToolBarState();
 }
 
@@ -1287,6 +1288,117 @@ void MainWindow::fixSplitterGlueing()
     {
         ui->splitter->setStyleSheet("");
     }
+}
+
+void MainWindow::configureTheme()
+{
+    using IC = IconColor;
+    using PM = PaletteMode;
+
+    switch (m_settings.theme)
+    {
+    case ThemeMode::System:
+    {
+        m_themeStyle   = ThemeStyle::System;
+        m_themePalette = m_stylesProvider->palette(PM::System);
+        m_uiIconColor  = m_stylesProvider->iconColor(IC::System);
+
+#ifdef Q_OS_WIN
+
+        if (SystemContext::isWindowsDarkTheme())
+        {
+            m_windowIconColor   = m_stylesProvider->iconColor(IC::White);
+            m_trayIconColor     = m_stylesProvider->iconColor(IC::White);
+            m_trayMenuIconColor = m_stylesProvider->iconColor(IC::White);
+        }
+        else
+        {
+            m_windowIconColor   = m_stylesProvider->iconColor(IC::Black);
+            m_trayIconColor     = m_stylesProvider->iconColor(IC::Black);
+            m_trayMenuIconColor = m_stylesProvider->iconColor(IC::Black);
+        }
+
+#else
+
+        m_windowIconColor   = m_stylesProvider->iconColor(IC::System);
+        m_trayIconColor     = m_stylesProvider->iconColor(IC::System);
+        m_trayMenuIconColor = m_stylesProvider->iconColor(IC::System);
+
+#endif
+
+        break;
+    }
+
+    case ThemeMode::Light:
+    {
+        m_themeStyle   = ThemeStyle::Fusion;
+        m_themePalette = m_stylesProvider->palette(PM::Light);
+        m_uiIconColor  = m_stylesProvider->iconColor(IC::Black);
+
+#ifdef Q_OS_WIN
+
+        /*
+         * Particular case.
+         *
+         * Fusion Light produces white tray menu.
+         * So tray icons should be black in this case.
+         *
+         * But the tray icon should follow Windows theme.
+         */
+
+        m_windowIconColor   = m_stylesProvider->iconColor(IC::Black);
+        m_trayMenuIconColor = m_stylesProvider->iconColor(IC::Black);
+
+        if (SystemContext::isWindowsDarkTheme())
+        {
+            m_trayIconColor = m_stylesProvider->iconColor(IC::White);
+        }
+        else
+        {
+            m_trayIconColor = m_stylesProvider->iconColor(IC::Black);
+        }
+
+#else
+
+        m_windowIconColor   = m_stylesProvider->iconColor(IC::System);
+        m_trayIconColor     = m_stylesProvider->iconColor(IC::System);
+        m_trayMenuIconColor = m_stylesProvider->iconColor(IC::System);
+
+#endif
+
+        break;
+    }
+
+    case ThemeMode::Dark:
+    {
+        m_themeStyle   = ThemeStyle::Fusion;
+        m_themePalette = m_stylesProvider->palette(PM::Dark);
+        m_uiIconColor  = m_stylesProvider->iconColor(IC::White);
+
+#ifdef Q_OS_WIN
+
+        m_windowIconColor   = m_stylesProvider->iconColor(IC::White);
+        m_trayIconColor     = m_stylesProvider->iconColor(IC::White);
+        m_trayMenuIconColor = m_stylesProvider->iconColor(IC::White);
+
+#else
+
+        m_windowIconColor   = m_stylesProvider->iconColor(IC::System);
+        m_trayIconColor     = m_stylesProvider->iconColor(IC::System);
+        m_trayMenuIconColor = m_stylesProvider->iconColor(IC::System);
+
+#endif
+
+        break;
+    }
+    }
+}
+
+void MainWindow::updateWindowIcon()
+{
+    qApp->setWindowIcon(m_iconProvider->icon(
+        IconId::Secrets,
+        m_windowIconColor));
 }
 
 void MainWindow::adjustInitialLayout()
@@ -1346,40 +1458,31 @@ void MainWindow::setupTray()
 
     trayMenu = new QMenu(this);
 
-    QColor trayColor;
-
 #ifdef Q_OS_WIN
 
     if (SystemContext::isWindowsDarkTheme())
     {
-        trayMenu->setPalette(createFusionDarkPalette());
-
-        trayColor = QColor(220, 220, 220);
+        trayMenu->setPalette(m_stylesProvider->palette(PaletteMode::Dark));
     }
     else
     {
-        trayMenu->setPalette(createFusionLightPalette());
-
-        trayColor = QColor(32, 32, 32);
+        trayMenu->setPalette(m_stylesProvider->palette(PaletteMode::Light));
     }
 
 #else
 
     trayMenu->setPalette(SystemContext::theme.palette);
 
-    trayColor = SystemContext::theme.palette.color(QPalette::WindowText);
-
 #endif
 
-    trayIcon->setIcon(m_iconProvider->system(IconId::Secrets));
-
-    m_trayShowAction = trayMenu->addAction(m_iconProvider->system(IconId::Maximize), tr("Show"));
-
-    m_trayHideAction = trayMenu->addAction(m_iconProvider->system(IconId::Minimize), tr("Hide"));
+    m_trayShowAction = trayMenu->addAction(QIcon(), tr("Show"));
+    m_trayHideAction = trayMenu->addAction(QIcon(), tr("Hide"));
 
     trayMenu->addSeparator();
 
-    m_trayQuitAction = trayMenu->addAction(m_iconProvider->system(IconId::Quit), tr("Quit"));
+    m_trayQuitAction = trayMenu->addAction(QIcon(), tr("Quit"));
+
+    updateTrayIcons();
 
     connect(
         m_trayShowAction,
@@ -1601,49 +1704,61 @@ void MainWindow::setupActions()
         });
 }
 
-void MainWindow::updateIcons()
+void MainWindow::updateUiIcons()
 {
-    qApp->setWindowIcon(m_iconProvider->windowIcon());
+    auto icon =
+        [this](IconId id)
+    {
+        return m_iconProvider->icon(
+            id,
+            m_uiIconColor);
+    };
 
-    m_noteCopySelectedAction->setIcon(m_iconProvider->noteToolBarIcons().copySelected);
+    m_noteCopySelectedAction->setIcon(icon(IconId::CopySelected));
 
-    ui->actionNew_Vault->setIcon(m_iconProvider->ui(IconId::NewVault));
+    ui->actionNew_Vault->setIcon(icon(IconId::NewVault));
+    ui->actionOpen_Vault->setIcon(icon(IconId::OpenVault));
+    ui->actionSave_Vault->setIcon(icon(IconId::SaveVault));
+    ui->actionSave_Vault_As->setIcon(icon(IconId::SaveVaultAs));
+    ui->actionExport_XML->setIcon(icon(IconId::ExportXml));
+    ui->actionExit->setIcon(icon(IconId::Exit));
+    ui->actionNew_Folder->setIcon(icon(IconId::NewFolder));
+    ui->actionNew_Entry->setIcon(icon(IconId::NewEntry));
+    ui->actionRename->setIcon(icon(IconId::Rename));
+    ui->actionDelete->setIcon(icon(IconId::Delete));
+    ui->actionCut->setIcon(icon(IconId::Cut));
+    ui->actionCopy->setIcon(icon(IconId::Copy));
+    ui->actionPaste->setIcon(icon(IconId::Paste));
+    ui->actionCollapse_All->setIcon(icon(IconId::CollapseAll));
+    ui->actionExpand_All->setIcon(icon(IconId::ExpandAll));
+    ui->actionSettings->setIcon(icon(IconId::Settings));
+    ui->actionChange_Master_Password->setIcon(icon(IconId::ChangeMasterPassword));
+    ui->actionAbout_Secrets->setIcon(icon(IconId::Secrets));
+    ui->actionAbout_Qt->setIcon(icon(IconId::AboutQt));
+}
 
-    ui->actionOpen_Vault->setIcon(m_iconProvider->ui(IconId::OpenVault));
+void MainWindow::updateTrayIcons()
+{
+    if (!trayIcon)
+    {
+        return;
+    }
 
-    ui->actionSave_Vault->setIcon(m_iconProvider->ui(IconId::SaveVault));
+    trayIcon->setIcon(m_iconProvider->icon(
+        IconId::Secrets,
+        m_trayIconColor));
 
-    ui->actionSave_Vault_As->setIcon(m_iconProvider->ui(IconId::SaveVaultAs));
+    m_trayShowAction->setIcon(m_iconProvider->icon(
+        IconId::Maximize,
+        m_trayMenuIconColor));
 
-    ui->actionExport_XML->setIcon(m_iconProvider->ui(IconId::ExportXml));
+    m_trayHideAction->setIcon(m_iconProvider->icon(
+        IconId::Minimize,
+        m_trayMenuIconColor));
 
-    ui->actionExit->setIcon(m_iconProvider->ui(IconId::Exit));
-
-    ui->actionNew_Folder->setIcon(m_iconProvider->ui(IconId::NewFolder));
-
-    ui->actionNew_Entry->setIcon(m_iconProvider->ui(IconId::NewEntry));
-
-    ui->actionRename->setIcon(m_iconProvider->ui(IconId::Rename));
-
-    ui->actionDelete->setIcon(m_iconProvider->ui(IconId::Delete));
-
-    ui->actionCut->setIcon(m_iconProvider->ui(IconId::Cut));
-
-    ui->actionCopy->setIcon(m_iconProvider->ui(IconId::Copy));
-
-    ui->actionPaste->setIcon(m_iconProvider->ui(IconId::Paste));
-
-    ui->actionCollapse_All->setIcon(m_iconProvider->ui(IconId::CollapseAll));
-
-    ui->actionExpand_All->setIcon(m_iconProvider->ui(IconId::ExpandAll));
-
-    ui->actionSettings->setIcon(m_iconProvider->ui(IconId::Settings));
-
-    ui->actionChange_Master_Password->setIcon(m_iconProvider->ui(IconId::ChangeMasterPassword));
-
-    ui->actionAbout_Secrets->setIcon(m_iconProvider->ui(IconId::Secrets));
-
-    ui->actionAbout_Qt->setIcon(m_iconProvider->ui(IconId::AboutQt));
+    m_trayQuitAction->setIcon(m_iconProvider->icon(
+        IconId::Quit,
+        m_trayMenuIconColor));
 }
 
 MainWindow::~MainWindow()

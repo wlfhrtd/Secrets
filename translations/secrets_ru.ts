@@ -59,13 +59,13 @@
     </message>
     <message>
         <location filename="../src/ui/mainwindow.ui" line="145"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1528"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1659"/>
         <source>Delete</source>
         <translation>Удалить</translation>
     </message>
     <message>
         <location filename="../src/ui/mainwindow.ui" line="150"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1527"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1658"/>
         <source>Rename</source>
         <translation>Переименовать</translation>
     </message>
@@ -76,19 +76,19 @@
     </message>
     <message>
         <location filename="../src/ui/mainwindow.ui" line="158"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1530"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1661"/>
         <source>Cut</source>
         <translation>Вырезать</translation>
     </message>
     <message>
         <location filename="../src/ui/mainwindow.ui" line="163"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1531"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1662"/>
         <source>Copy</source>
         <translation>Копировать</translation>
     </message>
     <message>
         <location filename="../src/ui/mainwindow.ui" line="168"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1532"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1663"/>
         <source>Paste</source>
         <translation>Вставить</translation>
     </message>
@@ -162,13 +162,13 @@
     </message>
     <message>
         <location filename="../src/ui/mainwindow.ui" line="227"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1534"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1665"/>
         <source>Collapse All</source>
         <translation>Свернуть всё</translation>
     </message>
     <message>
         <location filename="../src/ui/mainwindow.ui" line="232"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1535"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1666"/>
         <source>Expand All</source>
         <translation>Раскрыть всё</translation>
     </message>
@@ -190,14 +190,14 @@ Version %3</source>
     </message>
     <message>
         <location filename="../src/ui/mainwindow.cpp" line="927"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1319"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1454"/>
         <source>Copy selected</source>
         <translation>Копировать выделенное</translation>
     </message>
     <message>
         <location filename="../src/ui/mainwindow.cpp" line="928"/>
         <location filename="../src/ui/mainwindow.cpp" line="1012"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1320"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1455"/>
         <source>Reveal</source>
         <translation>Показать</translation>
     </message>
@@ -218,7 +218,7 @@ Version %3</source>
     <message>
         <location filename="../src/ui/mainwindow.cpp" line="936"/>
         <location filename="../src/ui/mainwindow.cpp" line="1003"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1321"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1456"/>
         <source>Edit</source>
         <comment>note tool bar edit action</comment>
         <translation>Редактировать</translation>
@@ -379,7 +379,7 @@ Wrong password or damaged file.</source>
     <message>
         <location filename="../src/ui/mainwindow.cpp" line="1239"/>
         <location filename="../src/ui/mainwindow.cpp" line="1248"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1313"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1448"/>
         <source>No vault</source>
         <translation>Хранилище не выбрано</translation>
     </message>
@@ -389,27 +389,27 @@ Wrong password or damaged file.</source>
         <translation>Хранилище: %1</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainwindow.cpp" line="1315"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1376"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1450"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1505"/>
         <source>Show</source>
         <translation>Показать</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainwindow.cpp" line="1524"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1655"/>
         <source>New Folder</source>
         <comment>action</comment>
         <translation>Создать папку</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainwindow.cpp" line="1525"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1656"/>
         <source>New Entry</source>
         <comment>action</comment>
         <translation>Создать запись</translation>
     </message>
     <message>
         <location filename="../src/ui/mainwindow.cpp" line="1030"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1316"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1378"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1451"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1507"/>
         <source>Hide</source>
         <translation>Скрыть</translation>
     </message>
@@ -419,8 +419,8 @@ Wrong password or damaged file.</source>
         <translation>Показать бессрочно</translation>
     </message>
     <message>
-        <location filename="../src/ui/mainwindow.cpp" line="1317"/>
-        <location filename="../src/ui/mainwindow.cpp" line="1382"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1452"/>
+        <location filename="../src/ui/mainwindow.cpp" line="1511"/>
         <source>Quit</source>
         <translation>Выход</translation>
     </message>
@@ -512,12 +512,12 @@ Wrong password or damaged file.</source>
         <translation>Время показа записи:</translation>
     </message>
     <message>
-        <location filename="../src/ui/settingsdialog.cpp" line="72"/>
+        <location filename="../src/ui/settingsdialog.cpp" line="73"/>
         <source>OK</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../src/ui/settingsdialog.cpp" line="73"/>
+        <location filename="../src/ui/settingsdialog.cpp" line="74"/>
         <source>Cancel</source>
         <translation>Отмена</translation>
     </message>

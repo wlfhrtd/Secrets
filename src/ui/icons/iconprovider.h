@@ -8,36 +8,38 @@
 #include <QIcon>
 
 
-struct NoteToolBarIcons
-{
-    QIcon copySelected;
-    QIcon reveal;
-    QIcon stopwatch;
-    QIcon hide;
-    QIcon edit;
-    QIcon save;
-};
+// struct NoteToolBarIcons
+// {
+//     QIcon copySelected;
+//     QIcon reveal;
+//     QIcon stopwatch;
+//     QIcon hide;
+//     QIcon edit;
+//     QIcon save;
+// };
 
 class IconProvider
 {
 public:
     IconProvider();
 
-    void setUiColor(const QColor& color);
-    void setSystemColor(const QColor& color);
+    QIcon icon(IconId id, const QColor& color) const;
 
-    QIcon ui(IconId id) const;
-    QIcon system(IconId id) const;
+    // void setUiColor(const QColor& color);
+    // void setSystemColor(const QColor& color);
 
-    QIcon windowIcon() const;
+    // QIcon ui(IconId id) const;
+    // QIcon system(IconId id) const;
 
-    const NoteToolBarIcons& noteToolBarIcons() const;
+    // QIcon windowIcon() const;
+
+    // const NoteToolBarIcons& noteToolBarIcons() const;
 
 private:
     static QString iconPath(IconId id);
 
-    QColor m_uiColor;
-    QColor m_systemColor;
+    // QColor m_uiColor;
+    // QColor m_systemColor;
 
     QPixmap renderSvgColored(
         const QString& path,
@@ -46,9 +48,9 @@ private:
 
     QIcon recolorIcon(const QString& path, const QColor& color) const;
 
-    NoteToolBarIcons m_noteIcons;
+    // NoteToolBarIcons m_noteIcons;
 
-    void rebuildCache();
+    // void rebuildCache();
 };
 
 #endif // ICONPROVIDER_H

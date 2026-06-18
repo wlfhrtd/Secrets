@@ -65,9 +65,9 @@ set(HEADERS
     src/application/singleinstance.h
     src/application/autostartmanager.h
     src/ui/icons/iconprovider.h
-    src/ui/theme/thememanager.h
+    src/ui/theme/stylesprovider.h
     src/ui/localization/languagemanager.h
-    src/ui/theme/thememode.h
+    src/ui/theme/palettemode.h
     src/ui/localization/languagemode.h
     src/ui/icons/IconId.h
 )
@@ -88,7 +88,7 @@ set(SOURCES
     src/application/appsettings.cpp
     src/application/autostartmanager.cpp
     src/ui/icons/iconprovider.cpp
-    src/ui/theme/thememanager.cpp
+    src/ui/theme/stylesprovider.cpp
     src/ui/localization/languagemanager.cpp
 )
 
@@ -113,6 +113,9 @@ else()
         ${SOURCES}
         ${UI_FILES}
         resources.qrc
+        src/ui/theme/iconcolor.h
+        src/ui/theme/themestyle.h
+        src/ui/theme/thememode.h
     )
 endif()
 
@@ -162,7 +165,7 @@ if(UNIX AND NOT APPLE)
             DESTINATION share/icons/hicolor/256x256/apps
             RENAME secrets.png)
 
-    install(FILES secrets.desktop
+    install(FILES packaging/secrets.desktop
             DESTINATION share/applications)
 endif()
 

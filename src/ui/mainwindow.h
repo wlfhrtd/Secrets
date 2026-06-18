@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "ui/theme/palettemode.h"
+#include "ui/theme/themestyle.h"
 #pragma once
 
 #include <memory>
@@ -19,7 +21,7 @@ class TreeModel;
 class TreeFilterProxyModel;
 class LanguageManager;
 class IconProvider;
-class ThemeManager;
+class StylesProvider;
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -133,8 +135,11 @@ private:
     SettingsStorage m_settingsStorage;
 
     // theme
-    std::unique_ptr<ThemeManager> m_themeManager;
+    ThemeStyle m_themeStyle;
+    QPalette m_themePalette;
+    std::unique_ptr<StylesProvider> m_stylesProvider;
     void applyTheme();
+    void configureTheme();
     void repolishWidgets();
     void fixSplitterGlueing();
 
@@ -158,7 +163,13 @@ private:
     void showTreeContextMenu(const QPoint& pos);
 
     //icons
+    QColor m_windowIconColor;
+    QColor m_uiIconColor;
+    QColor m_trayIconColor;
+    QColor m_trayMenuIconColor;
     std::unique_ptr<IconProvider> m_iconProvider;
-    void updateIcons();
+    void updateWindowIcon();
+    void updateUiIcons();
+    void updateTrayIcons();
 };
 #endif // MAINWINDOW_H
