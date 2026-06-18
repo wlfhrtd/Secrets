@@ -1458,22 +1458,23 @@ void MainWindow::setupTray()
 
     trayMenu = new QMenu(this);
 
-#ifdef Q_OS_WIN
+    // Gonna live without this for a while, leaving just in case
+// #ifdef Q_OS_WIN
 
-    if (SystemContext::isWindowsDarkTheme())
-    {
-        trayMenu->setPalette(m_stylesProvider->palette(PaletteMode::Dark));
-    }
-    else
-    {
-        trayMenu->setPalette(m_stylesProvider->palette(PaletteMode::Light));
-    }
+//     if (SystemContext::isWindowsDarkTheme())
+//     {
+//         trayMenu->setPalette(m_stylesProvider->palette(PaletteMode::Dark));
+//     }
+//     else
+//     {
+//         trayMenu->setPalette(m_stylesProvider->palette(PaletteMode::Light));
+//     }
 
-#else
+// #else
 
-    trayMenu->setPalette(SystemContext::theme.palette);
+//     trayMenu->setPalette(SystemContext::theme.palette);
 
-#endif
+// #endif
 
     m_trayShowAction = trayMenu->addAction(QIcon(), tr("Show"));
     m_trayHideAction = trayMenu->addAction(QIcon(), tr("Hide"));
