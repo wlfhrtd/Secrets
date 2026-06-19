@@ -3,43 +3,23 @@
 
 #pragma once
 
-#include "ui/icons/IconId.h"
+#include "ui/icons/iconcache.h"
+#include "ui/icons/iconid.h"
 #include <QColor>
 #include <QIcon>
 
-
-// struct NoteToolBarIcons
-// {
-//     QIcon copySelected;
-//     QIcon reveal;
-//     QIcon stopwatch;
-//     QIcon hide;
-//     QIcon edit;
-//     QIcon save;
-// };
 
 class IconProvider
 {
 public:
     IconProvider();
 
-    QIcon icon(IconId id, const QColor& color) const;
+    QIcon icon(IconId id, const QColor& color);
 
-    // void setUiColor(const QColor& color);
-    // void setSystemColor(const QColor& color);
-
-    // QIcon ui(IconId id) const;
-    // QIcon system(IconId id) const;
-
-    // QIcon windowIcon() const;
-
-    // const NoteToolBarIcons& noteToolBarIcons() const;
+    void clearCache();
 
 private:
     static QString iconPath(IconId id);
-
-    // QColor m_uiColor;
-    // QColor m_systemColor;
 
     QPixmap renderSvgColored(
         const QString& path,
@@ -48,9 +28,7 @@ private:
 
     QIcon recolorIcon(const QString& path, const QColor& color) const;
 
-    // NoteToolBarIcons m_noteIcons;
-
-    // void rebuildCache();
+    IconCache m_cache;
 };
 
 #endif // ICONPROVIDER_H

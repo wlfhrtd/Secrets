@@ -69,7 +69,11 @@ set(HEADERS
     src/ui/localization/languagemanager.h
     src/ui/theme/palettemode.h
     src/ui/localization/languagemode.h
-    src/ui/icons/IconId.h
+    src/ui/icons/iconid.h
+    src/ui/theme/iconcolor.h
+    src/ui/theme/themestyle.h
+    src/ui/theme/thememode.h
+    src/ui/icons/iconcache.h
 )
 
 set(SOURCES
@@ -90,6 +94,7 @@ set(SOURCES
     src/ui/icons/iconprovider.cpp
     src/ui/theme/stylesprovider.cpp
     src/ui/localization/languagemanager.cpp
+    src/ui/icons/iconcache.cpp
 )
 
 set(UI_FILES
@@ -113,9 +118,6 @@ else()
         ${SOURCES}
         ${UI_FILES}
         resources.qrc
-        src/ui/theme/iconcolor.h
-        src/ui/theme/themestyle.h
-        src/ui/theme/thememode.h
     )
 endif()
 

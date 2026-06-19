@@ -6,38 +6,28 @@
 
 IconProvider::IconProvider()
 {
-    // m_uiColor = Qt::black;
-    // m_systemColor = Qt::black;
-
-    // rebuildCache();
 }
 
-QIcon IconProvider::icon(IconId id, const QColor& color) const
+QIcon IconProvider::icon(IconId id, const QColor& color)
 {
-    return recolorIcon(iconPath(id), color);
+    if (m_cache.contains(id))
+    {
+        return m_cache.get(id);
+    }
+
+    QIcon icon = recolorIcon(
+        iconPath(id),
+        color);
+
+    m_cache.put(id, icon);
+
+    return icon;
 }
 
-// void IconProvider::setUiColor(const QColor& color)
-// {
-//     if (m_uiColor == color)
-//     {
-//         return;
-//     }
-
-//     m_uiColor = color;
-
-//     rebuildCache();
-// }
-
-// void IconProvider::setSystemColor(const QColor& color)
-// {
-//     if (m_systemColor == color)
-//     {
-//         return;
-//     }
-
-//     m_systemColor = color;
-// }
+void IconProvider::clearCache()
+{
+    m_cache.clear();
+}
 
 QPixmap IconProvider::renderSvgColored(
     const QString& path,
@@ -90,36 +80,6 @@ QIcon IconProvider::recolorIcon(const QString& path, const QColor& color) const
 
     return icon;
 }
-
-// QIcon IconProvider::ui(IconId id) const
-// {
-//     return recolorIcon(iconPath(id), m_uiColor);
-// }
-
-// QIcon IconProvider::system(IconId id) const
-// {
-//     return recolorIcon(iconPath(id), m_systemColor);
-// }
-
-// QIcon IconProvider::windowIcon() const
-// {
-//     return system(IconId::Secrets);
-// }
-
-// void IconProvider::rebuildCache()
-// {
-//     m_noteIcons.copySelected = ui(IconId::CopySelected);
-//     m_noteIcons.reveal       = ui(IconId::Reveal);
-//     m_noteIcons.stopwatch    = ui(IconId::Stopwatch);
-//     m_noteIcons.hide         = ui(IconId::Hide);
-//     m_noteIcons.edit         = ui(IconId::Edit);
-//     m_noteIcons.save         = ui(IconId::Save);
-// }
-
-// const NoteToolBarIcons& IconProvider::noteToolBarIcons() const
-// {
-//     return m_noteIcons;
-// }
 
 QString IconProvider::iconPath(IconId id)
 {

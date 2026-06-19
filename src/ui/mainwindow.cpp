@@ -1284,6 +1284,8 @@ void MainWindow::updateVaultLabel()
 
 void MainWindow::applyTheme()
 {
+    m_iconProvider->clearCache();
+
     configureTheme();
 
     qApp->setStyle(m_stylesProvider->style(m_themeStyle));
