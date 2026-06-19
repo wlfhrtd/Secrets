@@ -1377,8 +1377,8 @@ void MainWindow::configureTheme()
 
 #ifdef Q_OS_WIN
 
-        m_windowIconColor   = m_stylesProvider->iconColor(IC::White);
-        m_trayIconColor     = m_stylesProvider->iconColor(IC::White);
+        m_windowIconColor   = m_stylesProvider->iconColor(IC::Black);
+        m_trayIconColor     = m_stylesProvider->iconColor(IC::Black);
         m_trayMenuIconColor = m_stylesProvider->iconColor(IC::White);
 
 #else
