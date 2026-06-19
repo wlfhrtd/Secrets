@@ -74,6 +74,7 @@ set(HEADERS
     src/ui/theme/themestyle.h
     src/ui/theme/thememode.h
     src/ui/icons/iconcache.h
+    src/ui/icons/iconcachekey.h
 )
 
 set(SOURCES

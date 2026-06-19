@@ -10,16 +10,14 @@ IconProvider::IconProvider()
 
 QIcon IconProvider::icon(IconId id, const QColor& color)
 {
-    if (m_cache.contains(id))
+    if (m_cache.contains(id, color))
     {
-        return m_cache.get(id);
+        return m_cache.get(id, color);
     }
 
-    QIcon icon = recolorIcon(
-        iconPath(id),
-        color);
+    QIcon icon = recolorIcon(iconPath(id), color);
 
-    m_cache.put(id, icon);
+    m_cache.put(id, color, icon);
 
     return icon;
 }
