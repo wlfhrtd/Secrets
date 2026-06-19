@@ -59,22 +59,10 @@ QIcon IconProvider::recolorIcon(const QString& path, const QColor& color) const
 {
     QIcon icon;
 
-    const QList<QSize> sizes =
-        {
-            QSize(16,16),
-            QSize(24,24),
-            QSize(32,32),
-            QSize(48,48),
-            QSize(64,64)
-        };
-
-    for (const QSize& size : sizes)
-    {
-        icon.addPixmap(renderSvgColored(
-            path,
-            size,
-            color));
-    }
+    icon.addPixmap(renderSvgColored(
+        path,
+        QSize(128, 128),
+        color));
 
     return icon;
 }
