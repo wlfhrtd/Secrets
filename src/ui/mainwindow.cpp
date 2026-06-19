@@ -187,6 +187,17 @@ bool MainWindow::maybeSaveVault()
     box.button(QMessageBox::Discard)->setText(tr("Discard"));
     box.button(QMessageBox::Cancel)->setText(tr("Cancel"));
 
+#ifdef Q_OS_WIN
+
+    box.button(QMessageBox::Save)->setIcon(
+        m_iconProvider->icon(IconId::Save, m_uiIconColor));
+    box.button(QMessageBox::Discard)->setIcon(
+        m_iconProvider->icon(IconId::Delete, m_uiIconColor));
+    box.button(QMessageBox::Cancel)->setIcon(
+        m_iconProvider->icon(IconId::Exit, m_uiIconColor));
+
+#endif
+
     switch (box.exec())
     {
     case QMessageBox::Save:
@@ -775,6 +786,17 @@ bool MainWindow::maybeSaveNote()
     box.button(QMessageBox::Save)->setText(tr("Save"));
     box.button(QMessageBox::Discard)->setText(tr("Discard"));
     box.button(QMessageBox::Cancel)->setText(tr("Cancel"));
+
+#ifdef Q_OS_WIN
+
+    box.button(QMessageBox::Save)->setIcon(
+        m_iconProvider->icon(IconId::Save, m_uiIconColor));
+    box.button(QMessageBox::Discard)->setIcon(
+        m_iconProvider->icon(IconId::Delete, m_uiIconColor));
+    box.button(QMessageBox::Cancel)->setIcon(
+        m_iconProvider->icon(IconId::Exit, m_uiIconColor));
+
+#endif
 
     switch (box.exec())
     {
@@ -1377,9 +1399,28 @@ void MainWindow::configureTheme()
 
 #ifdef Q_OS_WIN
 
-        m_windowIconColor   = m_stylesProvider->iconColor(IC::Black);
-        m_trayIconColor     = m_stylesProvider->iconColor(IC::Black);
+        /*
+         * Another particular case.
+         *
+         * Fusion Dark produces black tray menu.
+         * So tray icons should be white in this case.
+         *
+         * But the tray icon itself should follow Windows theme.
+         * Same for window icon.
+         */
         m_trayMenuIconColor = m_stylesProvider->iconColor(IC::White);
+
+        if (SystemContext::isWindowsDarkTheme())
+        {
+            m_windowIconColor   = m_stylesProvider->iconColor(IC::White);
+            m_trayIconColor     = m_stylesProvider->iconColor(IC::White);
+
+        }
+        else
+        {
+            m_windowIconColor   = m_stylesProvider->iconColor(IC::Black);
+            m_trayIconColor     = m_stylesProvider->iconColor(IC::Black);
+        }
 
 #else
 
@@ -1458,7 +1499,8 @@ void MainWindow::setupTray()
 
     trayMenu = new QMenu(this);
 
-    // Gonna live without this for a while, leaving just in case
+// Gonna live without this for a while, left it here just in case;
+// Effect: tray menu native look with System theme on Win11
 // #ifdef Q_OS_WIN
 
 //     if (SystemContext::isWindowsDarkTheme())
