@@ -32,13 +32,18 @@ QPixmap IconProvider::renderSvgColored(
     const QSize& size,
     const QColor& color) const
 {
-    const qreal dpr = qApp->devicePixelRatio();
+    // Investigating weird cutting off of icons on Windows
+    // with 125% and higher scaling.
+    // Disabling DPR multiplier temporarly.
+    //
+    // const qreal dpr = qApp->devicePixelRatio();
 
     QSvgRenderer renderer(path);
 
-    QPixmap pix(size * dpr);
+    // QPixmap pix(size * dpr);
+    QPixmap pix(size);
 
-    pix.setDevicePixelRatio(dpr);
+    // pix.setDevicePixelRatio(dpr);
 
     pix.fill(Qt::transparent);
 
