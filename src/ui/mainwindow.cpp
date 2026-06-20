@@ -1162,20 +1162,23 @@ void MainWindow::onOpenVault()
         return;
     }
 
-    bool ok = false;
+    QInputDialog dialog(this);
 
-    QString password = QInputDialog::getText(
-        this,
-        tr("Vault Password"),
-        tr("Password:"),
-        QLineEdit::Password,
-        QString(),
-        &ok);
+    dialog.setWindowTitle(tr("Vault Password"));
+    dialog.setLabelText(tr("Password:"));
+    dialog.setTextEchoMode(QLineEdit::Password);
 
-    if (!ok)
+    // KDE aggresively calculates width;
+    // KWin introduces unwanted elision;
+    // this should work for now
+    dialog.resize(250, dialog.sizeHint().height());
+
+    if (dialog.exec() != QDialog::Accepted)
     {
         return;
     }
+
+    QString password = dialog.textValue();
 
     if (!m_vault->loadFromFile(path, password))
     {
