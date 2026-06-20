@@ -84,7 +84,10 @@ void AutostartManager::setEnabled(bool enabled, bool startMinimized)
     std::wstring applicationName = appName().toStdWString();
 
     if (enabled) {
-        QString exePath = QCoreApplication::applicationFilePath();
+        // ancient Windows Registry parser doesn't work with "/" in path
+        // use QDir::toNativeSeparators and "\" instead
+        QString exePath = QDir::toNativeSeparators(
+            QCoreApplication::applicationFilePath());
         QString value = "\"" + exePath + "\"";
 
         if (startMinimized)
