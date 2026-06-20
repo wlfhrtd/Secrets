@@ -70,6 +70,7 @@ private:
     void onNewFolder();
     void onNewEntry();
     void onRename();
+    void startRename(const QModelIndex& sourceIndex);
     void onDelete();
     void onCut();
     void onCopy();

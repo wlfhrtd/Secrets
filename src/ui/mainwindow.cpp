@@ -480,24 +480,74 @@ void MainWindow::onCopy()
 
 void MainWindow::onNewFolder()
 {
+    if (!maybeSaveNote())
+    {
+        return;
+    }
+
     QModelIndex current = ui->treeView->currentIndex();
 
     QModelIndex source = proxyModel->mapToSource(current);
 
-    model->addFolder(source, tr("New Folder", "object"));
+    Node* newNode = model->addFolder(source, tr("New Folder", "object"));
+
+    QModelIndex newNodeIndex = model->indexFromNode(newNode);
+
+    startRename(newNodeIndex);
 
     return;
 }
 
 void MainWindow::onNewEntry()
 {
+    if (!maybeSaveNote())
+    {
+        return;
+    }
+
     QModelIndex current = ui->treeView->currentIndex();
 
     QModelIndex source = proxyModel->mapToSource(current);
 
-    model->addEntry(source, tr("New Entry", "object"));
+    Node* newNode = model->addEntry(source, tr("New Entry", "object"));
+
+    QModelIndex newNodeIndex = model->indexFromNode(newNode);
+
+    startRename(newNodeIndex);
 
     return;
+}
+
+void MainWindow::startRename(const QModelIndex& sourceIndex)
+{
+    if (!sourceIndex.isValid())
+    {
+        return;
+    }
+
+    QModelIndex proxyIndex = proxyModel->mapFromSource(sourceIndex);
+
+    if (!proxyIndex.isValid())
+    {
+        return;
+    }
+
+    ui->treeView->scrollTo(proxyIndex);
+    ui->treeView->setCurrentIndex(proxyIndex);
+    ui->treeView->edit(proxyIndex);
+
+    // treeView->edit is not instant, without timer
+    // findChild<QLineEdit*>() often returns nullptr
+    QTimer::singleShot(
+        0,
+        this,
+        [this]()
+        {
+            if (QLineEdit* editor = ui->treeView->findChild<QLineEdit*>())
+            {
+                editor->selectAll();
+            }
+        });
 }
 
 void MainWindow::onRename()
@@ -941,8 +991,6 @@ void MainWindow::setupNoteToolBar()
     spacer->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     ui->noteToolBar->addWidget(spacer);
 
-    // const auto& icons = m_iconProvider->noteToolBarIcons();
-
     m_noteCopySelectedAction = ui->noteToolBar->addAction(m_iconProvider->icon(IconId::CopySelected, m_uiIconColor), QString());
     m_noteRevealAction = ui->noteToolBar->addAction(m_iconProvider->icon(IconId::Reveal, m_uiIconColor), QString());
 
@@ -1011,8 +1059,6 @@ void MainWindow::setupNoteToolBar()
 
 void MainWindow::updateNoteToolBarState()
 {
-    // const auto& icons = m_iconProvider->noteToolBarIcons();
-
     // EDIT / SAVE
     if (m_editMode)
     {

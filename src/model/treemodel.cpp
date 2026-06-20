@@ -479,17 +479,10 @@ void TreeModel::deleteNode(const QModelIndex &index)
 
 QModelIndex TreeModel::indexFromNode(Node* node) const
 {
-    if (!node)
+    if (!node || node == m_root.get())
     {
         return QModelIndex();
     }
-
-    if (node == m_root.get())
-    {
-        return QModelIndex();
-    }
-
-    Node* parent = node->parent;
 
     return createIndex(
         node->row(),
