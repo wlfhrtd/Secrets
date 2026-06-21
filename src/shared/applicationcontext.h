@@ -10,7 +10,7 @@ struct ApplicationContext
 {
     inline static const QString name = "Secrets";
 
-    inline static const QString version = "1.0";
+    inline static const QString version = "1.0.7";
 
     inline static const QString description = "Encrypted password manager.";
 
