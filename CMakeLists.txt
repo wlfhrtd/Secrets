@@ -166,7 +166,7 @@ install(
 if(UNIX AND NOT APPLE)
     install(FILES assets/icons/app/icon_256.png
             DESTINATION share/icons/hicolor/256x256/apps
-            RENAME secrets.png)
+            RENAME wlfhrtd-secrets.png)
 
     install(FILES packaging/secrets.desktop
             DESTINATION share/applications)
